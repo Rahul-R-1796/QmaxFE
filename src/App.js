@@ -1,7 +1,7 @@
 // src/App.tsx
 import React from 'react';
 import { Container, CssBaseline, Typography } from "@mui/material";
-import PostList from './components/PostList';
+import PostList from './components/PostList'; 
 
 function App() {
   return (
