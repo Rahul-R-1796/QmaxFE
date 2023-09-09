@@ -62,6 +62,24 @@ function App() {
     setSelectedPost(null);
   };
 
+  const resetState = () => {
+    // Clear local storage and reset state
+    localStorage.removeItem('posts');
+    localStorage.removeItem('searchTerm');
+    setPosts([]);
+    setSearchTerm('');
+    setSelectedPost(null);
+
+    // Fetch new data from the API and update state
+    fetch('https://jsonplaceholder.typicode.com/posts')
+      .then((response) => response.json())
+      .then((data) => {
+        setPosts(data);
+        localStorage.setItem('posts', JSON.stringify(data));
+      })
+      .catch((error) => console.error(error));
+  };
+
   const filteredPosts = posts.filter((post) =>
     post.title.toLowerCase().includes(searchTerm.toLowerCase())
   );
@@ -81,6 +99,14 @@ function App() {
         value={searchTerm}
         onChange={handleSearchChange}
       />
+      <Button
+        variant="contained"
+        color="primary"
+        onClick={resetState}
+        style={{ marginBottom: '16px' }}
+      >
+        Reset State
+      </Button>
       {filteredPosts.map((post) => (
         <Card key={post.id} variant="outlined" style={{ margin: '16px' }}>
           <CardContent>
