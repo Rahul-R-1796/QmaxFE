@@ -1,17 +1,15 @@
-// src/App.tsx
+// App.js
 import React from 'react';
-import { Container, CssBaseline, Typography } from "@mui/material";
-import PostList from './components/PostList'; 
+import PostCard from './PostCard';
 
 function App() {
   return (
-    <Container maxWidth="md">
-      <CssBaseline /> 
-      <Typography variant="h4" align="center" gutterBottom>
-        Posts and Comments
-      </Typography>
-      <PostList /> 
-    </Container>
+    <div className="App">
+      <header className="App-header">
+        <h1>Posts</h1>
+        <PostCard />
+      </header>
+    </div>
   );
 }
 
