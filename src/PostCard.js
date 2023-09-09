@@ -1,59 +1,55 @@
 // PostCard.js
-// ... (previous code)
+import React, { useState, useEffect } from 'react';
+import Card from '@mui/material/Card';
+import CardContent from '@mui/material/CardContent';
+import Typography from '@mui/material/Typography';
+import Button from '@mui/material/Button';
+import TextField from '@mui/material/TextField';
 
 const PostCard = () => {
   const [posts, setPosts] = useState([]);
   const [searchTerm, setSearchTerm] = useState('');
-  
+
   useEffect(() => {
-    // Check if posts are already in local storage
     const storedPosts = JSON.parse(localStorage.getItem('posts'));
-    
+
     if (storedPosts) {
       setPosts(storedPosts);
     } else {
-      // Fetch posts from the API on the first load
       fetch('https://jsonplaceholder.typicode.com/posts')
         .then((response) => response.json())
         .then((data) => {
           setPosts(data);
-          // Save posts to local storage
           localStorage.setItem('posts', JSON.stringify(data));
         })
         .catch((error) => console.error(error));
     }
-    // Function to delete a post by ID
-    const deletePost = (postId) => {
-      const updatedPosts = posts.filter((post) => post.id !== postId);
-      setPosts(updatedPosts);
-      localStorage.setItem('posts', JSON.stringify(updatedPosts));
-    };
+  }, []);
 
-    return () => {
-      // Cleanup any event listeners or intervals if necessary
-    };
-  }, [posts]);
+  const deletePost = (postId) => {
+    const updatedPosts = posts.filter((post) => post.id !== postId);
+    setPosts(updatedPosts);
+    localStorage.setItem('posts', JSON.stringify(updatedPosts));
+  };
 
-  // Function to handle search input change
   const handleSearchChange = (event) => {
     setSearchTerm(event.target.value);
   };
 
-  // Filter posts based on the search term
   const filteredPosts = posts.filter((post) =>
     post.title.toLowerCase().includes(searchTerm.toLowerCase())
   );
 
   return (
     <div>
-      <div>
-        <input
-          type="text"
-          placeholder="Search posts..."
-          value={searchTerm}
-          onChange={handleSearchChange}
-        />
-      </div>
+      <TextField
+        label="Search posts"
+        variant="outlined"
+        fullWidth
+        margin="normal"
+        value={searchTerm}
+        onChange={handleSearchChange}
+      />
       {filteredPosts.map((post) => (
         <Card key={post.id} variant="outlined" style={{ margin: '16px' }}>
           <CardContent>
