@@ -15,6 +15,14 @@ function App() {
   const [selectedPost, setSelectedPost] = useState(null);
   const [deleteCount, setDeleteCount] = useState(0);
 
+  // Load delete count from localStorage on initial load
+  useEffect(() => {
+    const storedDeleteCount = parseInt(localStorage.getItem('deleteCount'));
+    if (!isNaN(storedDeleteCount)) {
+      setDeleteCount(storedDeleteCount);
+    }
+  }, []);
+
   useEffect(() => {
     // Load posts from localStorage if available
     const storedPosts = JSON.parse(localStorage.getItem('posts'));
@@ -64,14 +72,18 @@ function App() {
     setSelectedPost(null);
   };
 
+  const resetCount = () => {
+    // Reset the delete count to 0
+    setDeleteCount(0);
+  };
+
   const resetState = () => {
-    // Clear local storage, reset state, and reset delete count
+    // Clear local storage, reset state (except delete count)
     localStorage.removeItem('posts');
     localStorage.removeItem('searchTerm');
     setPosts([]);
     setSearchTerm('');
     setSelectedPost(null);
-    setDeleteCount(0);
 
     // Fetch new data from the API and update state
     fetch('https://jsonplaceholder.typicode.com/posts')
@@ -92,6 +104,11 @@ function App() {
     localStorage.setItem('posts', JSON.stringify(posts));
   }, [posts]);
 
+  // Save the delete count to localStorage whenever it changes
+  useEffect(() => {
+    localStorage.setItem('deleteCount', deleteCount);
+  }, [deleteCount]);
+
   return (
     <div className="App">
       <TextField
@@ -109,6 +126,14 @@ function App() {
         style={{ marginBottom: '16px' }}
       >
         Reset State
+      </Button>
+      <Button
+        variant="contained"
+        color="secondary"
+        onClick={resetCount}
+        style={{ marginBottom: '16px', marginLeft: '16px' }}
+      >
+        Reset Count
       </Button>
       <div>
         <p>Delete Count: {deleteCount}</p>
