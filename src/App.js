@@ -15,6 +15,7 @@ function App() {
   const [selectedPost, setSelectedPost] = useState(null);
 
   useEffect(() => {
+    // Load posts from localStorage if available
     const storedPosts = JSON.parse(localStorage.getItem('posts'));
 
     if (storedPosts) {
@@ -57,6 +58,11 @@ function App() {
   const filteredPosts = posts.filter((post) =>
     post.title.toLowerCase().includes(searchTerm.toLowerCase())
   );
+
+  // Save the application state to localStorage whenever it changes
+  useEffect(() => {
+    localStorage.setItem('posts', JSON.stringify(posts));
+  }, [posts]);
 
   return (
     <div className="App">
