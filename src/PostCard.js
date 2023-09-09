@@ -6,8 +6,22 @@ const PostCard = () => {
   const [searchTerm, setSearchTerm] = useState('');
   
   useEffect(() => {
-    // ... (previous code)
-
+    // Check if posts are already in local storage
+    const storedPosts = JSON.parse(localStorage.getItem('posts'));
+    
+    if (storedPosts) {
+      setPosts(storedPosts);
+    } else {
+      // Fetch posts from the API on the first load
+      fetch('https://jsonplaceholder.typicode.com/posts')
+        .then((response) => response.json())
+        .then((data) => {
+          setPosts(data);
+          // Save posts to local storage
+          localStorage.setItem('posts', JSON.stringify(data));
+        })
+        .catch((error) => console.error(error));
+    }
     // Function to delete a post by ID
     const deletePost = (postId) => {
       const updatedPosts = posts.filter((post) => post.id !== postId);
