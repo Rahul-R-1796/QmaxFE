@@ -17,6 +17,7 @@ function App() {
   useEffect(() => {
     // Load posts from localStorage if available
     const storedPosts = JSON.parse(localStorage.getItem('posts'));
+    const storedSearchTerm = localStorage.getItem('searchTerm');
 
     if (storedPosts) {
       setPosts(storedPosts);
@@ -29,6 +30,10 @@ function App() {
         })
         .catch((error) => console.error(error));
     }
+
+    if (storedSearchTerm) {
+      setSearchTerm(storedSearchTerm);
+    }
   }, []);
 
   const deletePost = (postId) => {
@@ -38,7 +43,9 @@ function App() {
   };
 
   const handleSearchChange = (event) => {
-    setSearchTerm(event.target.value);
+    const newSearchTerm = event.target.value;
+    setSearchTerm(newSearchTerm);
+    localStorage.setItem('searchTerm', newSearchTerm);
   };
 
   const handlePostClick = (postId) => {
