@@ -13,6 +13,7 @@ function App() {
   const [posts, setPosts] = useState([]);
   const [searchTerm, setSearchTerm] = useState('');
   const [selectedPost, setSelectedPost] = useState(null);
+  const [deleteCount, setDeleteCount] = useState(0);
 
   useEffect(() => {
     // Load posts from localStorage if available
@@ -40,6 +41,7 @@ function App() {
     const updatedPosts = posts.filter((post) => post.id !== postId);
     setPosts(updatedPosts);
     localStorage.setItem('posts', JSON.stringify(updatedPosts));
+    setDeleteCount((prevCount) => prevCount + 1);
   };
 
   const handleSearchChange = (event) => {
@@ -63,12 +65,13 @@ function App() {
   };
 
   const resetState = () => {
-    // Clear local storage and reset state
+    // Clear local storage, reset state, and reset delete count
     localStorage.removeItem('posts');
     localStorage.removeItem('searchTerm');
     setPosts([]);
     setSearchTerm('');
     setSelectedPost(null);
+    setDeleteCount(0);
 
     // Fetch new data from the API and update state
     fetch('https://jsonplaceholder.typicode.com/posts')
@@ -107,6 +110,9 @@ function App() {
       >
         Reset State
       </Button>
+      <div>
+        <p>Delete Count: {deleteCount}</p>
+      </div>
       {filteredPosts.map((post) => (
         <Card key={post.id} variant="outlined" style={{ margin: '16px' }}>
           <CardContent>
