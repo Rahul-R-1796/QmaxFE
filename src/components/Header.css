@@ -1,35 +1,36 @@
+/* Header styles */
 .app-header {
-    background-color: #333;
-    color: white;
-    padding: 10px;
-    display: flex;
-    justify-content: space-between;
-    align-items: center;
-  }
-  
-  .title h1 {
-    font-size: 24px;
-    margin: 0;
-  }
-  
-  .contact-info {
-    text-align: right;
-  }
-  
-  .contact-info p {
-    margin: 5px 0;
-  }
-  
+  background-color: #333; /* Set your desired background color */
+  color: white;
+  padding: 10px;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
+
+.title h1 {
+  font-size: 24px;
+  margin: 0;
+}
+
+.contact-info {
+  text-align: right;
+}
+
+.contact-info p {
+  margin: 5px 0;
+}
+
 .contact-info a {
   color: white;
   text-decoration: none;
-  border: 1px solid white; 
-  padding: 5px 10px;
-  border-radius: 4px; 
-  transition: background-color 0.3s ease, border-color 0.3s ease;
+  border: 1px solid white; /* Add a border around the link */
+  padding: 5px 10px; /* Add padding to make it more clickable */
+  border-radius: 4px; /* Add rounded corners */
+  transition: background-color 0.3s ease, border-color 0.3s ease; /* Add a smooth transition effect */
+}
 
 .contact-info a:hover {
-  background-color: white; 
-  color: #333; 
+  background-color: white; /* Change background color on hover */
+  color: #333; /* Change text color on hover */
 }
-  
