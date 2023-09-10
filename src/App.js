@@ -1,13 +1,9 @@
 import React, { useState, useEffect } from 'react';
 import './App.css';
-import Card from '@mui/material/Card';
-import CardContent from '@mui/material/CardContent';
-import Typography from '@mui/material/Typography';
-import Button from '@mui/material/Button';
-import TextField from '@mui/material/TextField';
-import Dialog from '@mui/material/Dialog';
-import DialogContent from '@mui/material/DialogContent';
-import DialogTitle from '@mui/material/DialogTitle';
+import SearchBar from './components/SearchBar';
+import PostCard from './components/PostCard';
+import CommentsDialog from './components/CommentsDialog';
+import ResetButtons from './components/ResetButtons';
 
 function App() {
   const [posts, setPosts] = useState([]);
@@ -111,74 +107,20 @@ function App() {
 
   return (
     <div className="App">
-      <TextField
-        label="Search posts"
-        variant="outlined"
-        fullWidth
-        margin="normal"
-        value={searchTerm}
-        onChange={handleSearchChange}
-      />
-      <Button
-        variant="contained"
-        color="primary"
-        onClick={resetState}
-        style={{ marginBottom: '16px' }}
-      >
-        Reset State
-      </Button>
-      <Button
-        variant="contained"
-        color="secondary"
-        onClick={resetCount}
-        style={{ marginBottom: '16px', marginLeft: '16px' }}
-      >
-        Reset Count
-      </Button>
+      <SearchBar searchTerm={searchTerm} handleSearchChange={handleSearchChange} />
+      <ResetButtons resetState={resetState} resetCount={resetCount} />
       <div>
         <p>Delete Count: {deleteCount}</p>
       </div>
       {filteredPosts.map((post) => (
-        <Card key={post.id} variant="outlined" style={{ margin: '16px' }}>
-          <CardContent>
-            <Typography variant="h5" component="div">
-              {post.title}
-            </Typography>
-            <Typography color="text.secondary">{post.body}</Typography>
-            <Button
-              variant="contained"
-              color="secondary"
-              onClick={() => deletePost(post.id)}
-              style={{ marginTop: '8px' }}
-            >
-              Delete
-            </Button>
-            <Button
-              variant="contained"
-              color="primary"
-              onClick={() => handlePostClick(post.id)}
-              style={{ marginTop: '8px', marginLeft: '8px' }}
-            >
-              View Comments
-            </Button>
-          </CardContent>
-        </Card>
+        <PostCard
+          key={post.id}
+          post={post}
+          deletePost={deletePost}
+          handlePostClick={handlePostClick}
+        />
       ))}
-      <Dialog open={selectedPost !== null} onClose={closeDialog}>
-        {selectedPost && (
-          <div>
-            <DialogTitle>Comments</DialogTitle>
-            <DialogContent>
-              {selectedPost.comments.map((comment) => (
-                <div key={comment.id}>
-                  <Typography variant="h6">{comment.name}</Typography>
-                  <Typography color="text.secondary">{comment.body}</Typography>
-                </div>
-              ))}
-            </DialogContent>
-          </div>
-        )}
-      </Dialog>
+      <CommentsDialog selectedPost={selectedPost} closeDialog={closeDialog} />
     </div>
   );
 }
