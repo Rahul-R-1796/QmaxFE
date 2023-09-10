@@ -6,82 +6,26 @@ import CommentsDialog from './components/CommentsDialog';
 import ResetButtons from './components/ResetButtons';
 
 function App() {
+  // State variables
   const [posts, setPosts] = useState([]);
   const [searchTerm, setSearchTerm] = useState('');
   const [selectedPost, setSelectedPost] = useState(null);
   const [deleteCount, setDeleteCount] = useState(0);
 
-  // Load delete count from localStorage on initial load
+  // Load data from localStorage on initial load
   useEffect(() => {
-    const storedDeleteCount = parseInt(localStorage.getItem('deleteCount'));
-    if (!isNaN(storedDeleteCount)) {
-      setDeleteCount(storedDeleteCount);
-    }
+    const storedDeleteCount = parseInt(localStorage.getItem('deleteCount')) || 0;
+    setDeleteCount(storedDeleteCount);
+
+    const storedPosts = JSON.parse(localStorage.getItem('posts')) || [];
+    setPosts(storedPosts);
+
+    const storedSearchTerm = localStorage.getItem('searchTerm') || '';
+    setSearchTerm(storedSearchTerm);
   }, []);
 
-  useEffect(() => {
-    // Load posts from localStorage if available
-    const storedPosts = JSON.parse(localStorage.getItem('posts'));
-    const storedSearchTerm = localStorage.getItem('searchTerm');
-
-    if (storedPosts) {
-      setPosts(storedPosts);
-    } else {
-      fetch('https://jsonplaceholder.typicode.com/posts')
-        .then((response) => response.json())
-        .then((data) => {
-          setPosts(data);
-          localStorage.setItem('posts', JSON.stringify(data));
-        })
-        .catch((error) => console.error(error));
-    }
-
-    if (storedSearchTerm) {
-      setSearchTerm(storedSearchTerm);
-    }
-  }, []);
-
-  const deletePost = (postId) => {
-    const updatedPosts = posts.filter((post) => post.id !== postId);
-    setPosts(updatedPosts);
-    localStorage.setItem('posts', JSON.stringify(updatedPosts));
-    setDeleteCount((prevCount) => prevCount + 1);
-  };
-
-  const handleSearchChange = (event) => {
-    const newSearchTerm = event.target.value;
-    setSearchTerm(newSearchTerm);
-    localStorage.setItem('searchTerm', newSearchTerm);
-  };
-
-  const handlePostClick = (postId) => {
-    // Fetch comments for the selected post
-    fetch(`https://jsonplaceholder.typicode.com/posts/${postId}/comments`)
-      .then((response) => response.json())
-      .then((comments) => {
-        setSelectedPost({ postId, comments });
-      })
-      .catch((error) => console.error(error));
-  };
-
-  const closeDialog = () => {
-    setSelectedPost(null);
-  };
-
-  const resetCount = () => {
-    // Reset the delete count to 0
-    setDeleteCount(0);
-  };
-
-  const resetState = () => {
-    // Clear local storage, reset state (except delete count)
-    localStorage.removeItem('posts');
-    localStorage.removeItem('searchTerm');
-    setPosts([]);
-    setSearchTerm('');
-    setSelectedPost(null);
-
-    // Fetch new data from the API and update state
+  // Fetch posts from API and store in state
+  const fetchPosts = () => {
     fetch('https://jsonplaceholder.typicode.com/posts')
       .then((response) => response.json())
       .then((data) => {
@@ -91,24 +35,61 @@ function App() {
       .catch((error) => console.error(error));
   };
 
+  // Delete a post
+  const deletePost = (postId) => {
+    const updatedPosts = posts.filter((post) => post.id !== postId);
+    setPosts(updatedPosts);
+    localStorage.setItem('posts', JSON.stringify(updatedPosts));
+    setDeleteCount(deleteCount + 1);
+  };
+
+  // Fetch comments for a selected post
+  const handlePostClick = (postId) => {
+    fetch(`https://jsonplaceholder.typicode.com/posts/${postId}/comments`)
+      .then((response) => response.json())
+      .then((comments) => {
+        setSelectedPost({ postId, comments });
+      })
+      .catch((error) => console.error(error));
+  };
+
+  // Close the comments dialog
+  const closeDialog = () => {
+    setSelectedPost(null);
+  };
+
+  // Reset delete count to 0
+  const resetCount = () => {
+    setDeleteCount(0);
+  };
+
+  // Reset state and fetch new data
+  const resetState = () => {
+    localStorage.removeItem('posts');
+    localStorage.removeItem('searchTerm');
+    setPosts([]);
+    setSearchTerm('');
+    setSelectedPost(null);
+    resetCount();
+    fetchPosts();
+  };
+
+  // Filter posts based on search term
   const filteredPosts = posts.filter((post) =>
     post.title.toLowerCase().includes(searchTerm.toLowerCase())
   );
 
-  // Save the application state to localStorage whenever it changes
+  // Save state changes to localStorage
   useEffect(() => {
     localStorage.setItem('posts', JSON.stringify(posts));
-  }, [posts]);
-
-  // Save the delete count to localStorage whenever it changes
-  useEffect(() => {
+    localStorage.setItem('searchTerm', searchTerm);
     localStorage.setItem('deleteCount', deleteCount);
-  }, [deleteCount]);
+  }, [posts, searchTerm, deleteCount]);
 
   return (
     <div className="App">
-      <SearchBar searchTerm={searchTerm} handleSearchChange={handleSearchChange} />
-      <ResetButtons resetState={resetState} resetCount={resetCount} />
+      <SearchBar searchTerm={searchTerm} handleSearchChange={setSearchTerm} />
+      <ResetButtons resetState={resetState} resetCount={resetCount} deleteCount={deleteCount} />
       <div>
         <p>Delete Count: {deleteCount}</p>
       </div>
