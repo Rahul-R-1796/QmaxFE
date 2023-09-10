@@ -4,6 +4,7 @@ import SearchBar from './components/SearchBar';
 import PostCard from './components/PostCard';
 import CommentsDialog from './components/CommentsDialog';
 import ResetButtons from './components/ResetButtons';
+import Header from './components/Header';
 
 function App() {
   const [posts, setPosts] = useState([]);
@@ -83,6 +84,7 @@ function App() {
 
   return (
     <div className="App">
+      <Header />
       <SearchBar searchTerm={searchTerm} handleSearchChange={handleSearchChange} />
       <ResetButtons resetState={resetState} resetCount={resetCount} deleteCount={deleteCount} />
       <div>
