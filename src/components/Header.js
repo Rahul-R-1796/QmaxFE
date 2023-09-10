@@ -10,9 +10,9 @@ function Header() {
       <div className="contact-info">
         <p>R Rahul</p>
         <p>+91 8610955329</p>
-        <p>Mailid: rahulrajenderan96@gmail.com</p>
+        <p>rahulrajenderan96@gmail.com</p>
         <a href="https://github.com/Rahul-R-1796/QmaxFE.git" target="_blank" rel="noopener noreferrer">
-          GitHub
+          GitHub Link
         </a>
       </div>
     </header>
