@@ -20,12 +20,16 @@
     margin: 5px 0;
   }
   
-  .contact-info a {
-    color: white;
-    text-decoration: none;
-  }
-  
-  .contact-info a:hover {
-    text-decoration: underline;
-  }
+.contact-info a {
+  color: white;
+  text-decoration: none;
+  border: 1px solid white; 
+  padding: 5px 10px;
+  border-radius: 4px; 
+  transition: background-color 0.3s ease, border-color 0.3s ease;
+
+.contact-info a:hover {
+  background-color: white; 
+  color: #333; 
+}
   
